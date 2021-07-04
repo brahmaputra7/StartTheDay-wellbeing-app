@@ -1,6 +1,9 @@
 # Dockerfile
 FROM node:alpine
 
+# adding required file
+apk add --no-cache make gcc g++ python pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev
+
 # create destination directory
 RUN mkdir -p /usr/src/nuxt-app
 WORKDIR /usr/src/nuxt-app
