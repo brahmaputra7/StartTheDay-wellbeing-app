@@ -1,8 +1,9 @@
 <template>
+<div>
   <div class="section1">
     <v-container>
       
-        <div class="sectionTitle mt-10">
+        <div class="sectionTitle mt-10 text-center">
           COVID-19 Information Center
         </div>
 
@@ -52,7 +53,7 @@
                 <div>
                   <div class="titleData text-center">Mortality Rate</div>
                   <div class="valueData text-center" v-if="currentAttribute.Mortality_Rate!==null">{{currentAttribute.Mortality_Rate.toFixed(2)}}</div>
-                  <div class="valueData text-center" v-else="currentAttribute.Mortality_Rate!==null">-</div>
+                  <div class="valueData text-center" v-else>-</div>
                 </div>
               </div>
 
@@ -60,7 +61,7 @@
                 <div>
                   <div class="titleData text-center">Confirmed</div>
                   <div class="valueData text-center" v-if="currentAttribute.Confirmed!==null">{{getThousands(currentAttribute.Confirmed)}}</div>
-                  <div class="valueData text-center" v-else="currentAttribute.Confirmed!==null">-</div>
+                  <div class="valueData text-center" v-else>-</div>
                 </div>
               </div>
 
@@ -68,7 +69,7 @@
                 <div>
                   <div class="titleData text-center">Recovered</div>
                   <div class="valueData text-center" v-if="currentAttribute.Recovered!==null">{{getThousands(currentAttribute.Recovered)}}</div>
-                  <div class="valueData text-center" v-else="currentAttribute.Recovered!==null">-</div>
+                  <div class="valueData text-center" v-else>-</div>
                 </div>
               </div>
 
@@ -76,7 +77,7 @@
                 <div>
                   <div class="titleData text-center">Death</div>
                   <div class="valueData text-center" v-if="currentAttribute.Deaths!==null">{{getThousands(currentAttribute.Deaths)}}</div>
-                  <div class="valueData text-center" v-else="currentAttribute.Deaths!==null">-</div>
+                  <div class="valueData text-center" v-else>-</div>
                 </div>
               </div>
 
@@ -84,7 +85,7 @@
                 <div>
                   <div class="titleData text-center">Active</div>
                   <div class="valueData text-center" v-if="currentAttribute.Active!==null">{{getThousands(currentAttribute.Active)}}</div>
-                  <div class="valueData text-center" v-else="currentAttribute.Active!==null">-</div>
+                  <div class="valueData text-center" v-else>-</div>
                 </div>
               </div>
 
@@ -100,6 +101,92 @@
     </v-container>
   </div>
 
+  <div class="section2 pt-10">
+    <div style="display:flex;flex-flow:column;justify-content:center;align-items:center">
+      <div class="sectionTitle2 mt-10 px-3 text-center">
+        Discover Latest COVID-19 News
+      </div>
+      <div class="separatorGreen my-5"></div>
+      <div class="px-10 text-center" style="max-width:600px">
+        <div>
+          <div>
+            <v-autocomplete :loading="newsLoading" solo rounded :items="countryList" item-text="name" v-model="selectedCountry" return-object @change="retrieveNewsData(selectedCountry.code)"></v-autocomplete>
+          </div>
+        </div>
+      </div>
+    </div>
+    <v-container>
+      <v-row>
+        <v-col md="6" cols="12" lg="6" xl="6" v-for="item,index in newsData.slice(0,8)" :key="index" @click="goToLink(item.url)">
+          <div class="newsArea pa-3 fill-height">
+            <div>
+              <div class="newsTitle">{{item.title}}</div>
+              <div class="newsAuthor"><b><a>{{item.source}}</a></b> | author: <b>{{item.author}}</b></div>
+            </div>
+            <div class="newsDescription my-3">{{item.description}}</div>
+            <div>{{getDateDDMMYYYY(item.published_at)}}</div>
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <div style="color:#fff" class="text-center" v-if="newsData.length==0">News not found.</div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+
+  <div class="section3 pb-10">
+
+    <v-container>
+      <v-row>
+        <v-col cols="12" class="d-flex justify-center">
+          <div>
+          <div class="sectionTitle2 mt-10">
+            Be Inspired: Covid-19 Updates
+          </div>
+          <div>Check out the latest inspiring post related to covid-19 from international organization</div>
+          <div class="separatorGreen my-5 mx-auto"></div>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+          <v-col cols="12" md="4" lg="4" xl="4">
+            <div class="pa-5 elevation-2" style="border-radius:30px">
+              <iframe style="width:100%;height:600px" src="https://www.instagram.com/p/CQvNTNQj67X/embed" frameBorder="0"></iframe>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" lg="4" xl="4">
+            <div class="pa-5 elevation-2" style="border-radius:30px">
+              <iframe style="width:100%;height:600px" src="https://www.instagram.com/p/CQ3iRC-tLk0/embed" frameBorder="0"></iframe>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" lg="4" xl="4">
+            <div class="pa-5 elevation-2" style="border-radius:30px">
+              <iframe style="width:100%;height:600px" src="https://www.instagram.com/p/CQ1vGmpskJv/embed" frameBorder="0"></iframe>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" lg="4" xl="4">
+            <div class="pa-5 elevation-2" style="border-radius:30px">
+              <iframe style="width:100%;height:600px" src="https://www.instagram.com/p/CQ1KxZ2niwh/embed" frameBorder="0"></iframe>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" lg="4" xl="4">
+            <div class="pa-5 elevation-2" style="border-radius:30px">
+              <iframe style="width:100%;height:600px" src="https://www.instagram.com/p/CQjJPHmoUxT/embed" frameBorder="0"></iframe>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4" lg="4" xl="4">
+            <div class="pa-5 elevation-2" style="border-radius:30px">
+              <iframe style="width:100%;height:600px" src="https://www.instagram.com/p/CQmAtiDBGYw/embed" frameBorder="0"></iframe>
+            </div>
+          </v-col>
+      </v-row>
+    </v-container>
+  </div>
+
+  <div class="section4 pa-10 text-center">
+    <i>This website is under development. if you have any suggestions please email me at <b>brahmaputra1996@gmail.com</b></i>
+  </div>
+</div>
 </template>
 
 <script>
@@ -115,8 +202,223 @@ export default {
       graphicMarker:{},
       geoJSONlayer:{},
       currentAttribute:{},
-      mapserverLoading:false
+      mapserverLoading:false,
+      newsData:[],
+      newsLoading:false,
+      selectedCountry:{
+        name:'United States',
+        code:'us'
+      },
+      countryList:[
+        {
+          name:'Argentine',
+          code:'ar'
+        },
+        {
+          name:'Australia',
+          code:'au'
+        },
+        {
+          name:'Austria',
+          code:'at'
+        },
+        {
+          name:'Belgium',
+          code:'be'
+        },
+        {
+          name:'Brazil',
+          code:'br'
+        },
+        {
+          name:'Bulgaria',
+          code:'bg'
+        },
+        {
+          name:'Canada',
+          code:'cn'
+        },
+        {
+          name:'Colombia',
+          code:'co'
+        },
+        {
+          name:'Czech Republic',
+          code:'cz'
+        },
+        {
+          name:'Egypt',
+          code:'eg'
+        },
+        {
+          name:'France',
+          code:'fr'
+        },
+        {
+          name:'Germany',
+          code:'de'
+        },
+        {
+          name:'Greece',
+          code:'ge'
+        },
+        {
+          name:'Hongkiong',
+          code:'hk'
+        },
+        {
+          name:'Hungary',
+          code:'hu'
+        },
+        {
+          name:'India',
+          code:'in'
+        },
+        {
+          name:'Indonesia',
+          code:'id'
+        },
+        {
+          name:'Ireland',
+          code:'ie'
+        },
+        {
+          name:'Israel',
+          code:'il'
+        },
+        {
+          name:'Italy',
+          code:'it'
+        },
+        {
+          name:'Japan',
+          code:'jp'
+        },
+        {
+          name:'Latvia',
+          code:'lv'
+        },
+        {
+          name:'Lithuania',
+          code:'lt'
+        },
+        {
+          name:'Malaysia',
+          code:'my'
+        },
+        {
+          name:'Mexico',
+          code:'mx'
+        },
+        {
+          name:'Morocco',
+          code:'ma'
+        },
+        {
+          name:'Netherlands',
+          code:'nl'
+        },
+        {
+          name:'New Zealand',
+          code:'nz'
+        },
+        {
+          name:'Nigeria',
+          code:'ng'
+        },
+        {
+          name:'Norway',
+          code:'no'
+        },
+        {
+          name:'Phillipines',
+          code:'ph'
+        },
+        {
+          name:'Poland',
+          code:'pl'
+        },
+        {
+          name:'Portugal',
+          code:'pt'
+        },
+        {
+          name:'Romania',
+          code:'ro'
+        },
+        {
+          name:'Saudi Arabia',
+          code:'sa'
+        },
+        {
+          name:'Serbia',
+          code:'rs'
+        },
+        {
+          name:'Singapore',
+          code:'sg'
+        },
+        {
+          name:'Slovakia',
+          code:'sa'
+        },
+        {
+          name:'Slovenia',
+          code:'si'
+        },
+        {
+          name:'South Africa',
+          code:'za'
+        },
+        {
+          name:'South Korea',
+          code:'kr'
+        },
+        {
+          name:'Sweden',
+          code:'se'
+        },
+        {
+          name:'Switzterland',
+          code:'ch'
+        },
+        {
+          name:'Taiwan',
+          code:'tw'
+        },
+        {
+          name:'Thailand',
+          code:'th'
+        },
+        {
+          name:'Turkey',
+          code:'tr'
+        },
+        {
+          name:'UAE',
+          code:'ae'
+        },
+        {
+          name:'Ukraine',
+          code:'ua'
+        },
+        {
+          name:'United Kingdom',
+          code:'gb'
+        },
+        {
+          name:'United States',
+          code:'us'
+        },
+        {
+          name:'Venezuela',
+          code:'ve'
+        },
+      ]
     }
+  },
+  created(){
+    this.retrieveNewsData('us')
   },
   mounted(){
     this.createMap()
@@ -131,7 +433,11 @@ export default {
 
                 //set map
                 this.map = new Map({
-                    basemap: "osm" // Basemap layer service
+                    basemap: {
+                  portalItem: {
+                    id: "8d91bd39e873417ea21673e0fee87604"
+                  }
+                },
                 });
                 
                 //set view
@@ -225,6 +531,16 @@ export default {
       d.setTime(date);
       return d
     },
+    getDateDDMMYYYY(date) {
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      const dateObj = new Date(date);
+      const month = monthNames[dateObj.getMonth()];
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      const year = dateObj.getFullYear();
+      const output = month  + '\n'+ day  + ',' + year;
+      return output
+    },
     retrieveMapServerData(objectid){
       this.mapserverLoading = true
       axios({
@@ -232,10 +548,32 @@ export default {
       }).then(res=>{
         console.log(res)
         this.currentAttribute = res.data.features[0].attributes
-        console.log(this.currentAttribute)
+        if(this.currentAttribute.ISO3!==null){
+          this.retrieveNewsData(this.selectedCountry.code)
+        }
+        console.log(this.currentAttribute.ISO3)
       }).finally(res=>{
         this.mapserverLoading = false
       })
+    },
+    retrieveNewsData(country){
+      this.newsLoading=true
+      axios({
+        url:'http://api.mediastack.com/v1/news?access_key=bcba5256e5d15feb335b6645a81fb555&languages=en&countries='+country+'&keywords=covid'
+      }).then(res=>{
+        this.newsData = res.data.data
+        this.newsData.forEach((item,index)=>{
+          if(item.source=='lewrockwell'){
+            this.newsData.splice(index,1)
+          }
+        })
+        console.log(this.newsData)
+      }).finally(res=>{
+        this.newsLoading = false
+      })
+    },
+    goToLink(url){
+      window.open(url,"_blank")
     }
   }
 }
@@ -255,12 +593,34 @@ export default {
   position:relative;
   border-radius: 30px;
   overflow: hidden;
+  height:600px;
+  background-color:#fff;
 }
 
 .section1 {
 background: rgb(20,84,138);
 background: radial-gradient(circle, rgba(20,84,138,1) 0%, rgba(32,76,134,1) 0%, rgba(0,0,0,1) 100%);
   min-height: 100vh;
+  padding-bottom:100px;
+}
+.section2 {
+background: rgb(32,32,32);
+background: linear-gradient(180deg, rgba(32,32,32,1) 0%, rgba(15,14,145,1) 100%);
+  min-height: 100vh;
+  padding-bottom:100px;
+}
+
+.sectionTitle2 {
+  font-size:2.5em;
+  font-weight:900;
+  display:flex;
+  justify-content: center;
+  letter-spacing: -1px;
+  line-height:1;
+  background: rgb(38,156,255);
+  background: linear-gradient(58deg, rgba(38,156,255,1) 0%, rgba(235,118,255,1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .sectionTitle {
@@ -271,6 +631,10 @@ background: radial-gradient(circle, rgba(20,84,138,1) 0%, rgba(32,76,134,1) 0%, 
   justify-content: center;
   letter-spacing: -1px;
   line-height:1;
+  background: rgb(38,156,255);
+  background: linear-gradient(58deg, rgba(38,156,255,1) 0%, rgba(235,118,255,1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .sectionSubtitle {
@@ -353,6 +717,50 @@ background: radial-gradient(circle, rgba(20,84,138,1) 0%, rgba(32,76,134,1) 0%, 
     font-size:2em;
     font-weight: bold;
   }
+}
+
+.separatorGreen {
+  width:250px;
+  height:5px;
+  border-radius:10px;background: rgb(20,84,138);
+background: linear-gradient(58deg, rgba(20,84,138,1) 0%, rgba(189,93,206,1) 100%);
+}
+
+.newsArea {
+  &:hover {
+    transform:scale(1.1);
+    background: rgb(113,24,117);
+    background: linear-gradient(270deg, rgba(113,24,117,1) 0%, rgba(14,45,145,1) 100%);
+  }
+  transition:0.3s;
+  box-shadow: 2px 10px 18px 0px rgba(0,0,0,0.21);
+  -webkit-box-shadow: 2px 10px 18px 0px rgba(0,0,0,0.21);
+  -moz-box-shadow: 2px 10px 18px 0px rgba(0,0,0,0.21);
+  border-radius:20px;
+  display:flex;
+  flex-flow:column wrap;
+  justify-content: space-between;
+  color:#fff;
+  background-color:#000;
+  cursor:pointer;
+  }
+
+.newsTitle {
+  font-weight: bold;
+  font-size:1.2em;
+  line-height: 1;
+}
+
+.newsAuthor {
+  font-size:0.6em;
+}
+
+.newsDescription {
+  font-size:0.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 
 /* width */
