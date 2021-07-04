@@ -425,9 +425,9 @@ export default {
   },
   methods:{
     createMap(){
-           loadModules(['esri/views/MapView','esri/Map', 'esri/WebMap', 'esri/Graphic','esri/layers/GraphicsLayer','esri/layers/MapImageLayer','esri/widgets/Search','esri/tasks/Locator', 'esri/geometry/support/webMercatorUtils', 'esri/widgets/Legend', 'esri/widgets/BasemapGallery', 'esri/config','esri/core/urlUtils', 'esri/widgets/AreaMeasurement2D','esri/widgets/DistanceMeasurement2D', 'esri/widgets/ScaleBar','esri/widgets/Sketch','esri/widgets/Bookmarks',
-            "esri/widgets/Expand","esri/layers/GeoJSONLayer","esri/layers/FeatureLayer","esri/geometry/Extent"])
-            .then(([MapView, Map, WebMap, Graphic, GraphicsLayer, MapImageLayer, Search, Locator, webMercatorUtils, Legend, BasemapGallery, esriConfig, urlUtils, AreaMeasurement2D, DistanceMeasurement2D, ScaleBar,Sketch,Bookmarks,Expand,GeoJSONLayer,FeatureLayer,Extent]) => {
+           loadModules(['esri/views/MapView','esri/Map', 'esri/Graphic',
+            "esri/layers/GeoJSONLayer"])
+            .then(([MapView, Map, Graphic,GeoJSONLayer,]) => {
           
                 loadCss()
 
@@ -468,10 +468,10 @@ export default {
                     type: "opacity",
                     field: ["Mortality_Rate"],
                     stops: [
-                      { value: 0, opacity: 0.2, label: "< 0-10000" },
-                      { value: 1.5, opacity: 0.5, label: "10000 - 2000" },
-                      { value: 3, opacity: 0.8, label: "> 20000" },
-                      { value: 4.5, opacity: 1, label: "> 20000" }
+                      { value: 0, opacity: 0.2, label: "< 0 - 1.5" },
+                      { value: 1.5, opacity: 0.5, label: "1.5 - 3" },
+                      { value: 3, opacity: 0.8, label: "3 - 4.5" },
+                      { value: 4.5, opacity: 1, label: "> 4.5" }
                     ]
                 }];
                 
@@ -514,7 +514,6 @@ export default {
 
                   if(item.graphic.attributes.OBJECTID!==undefined){
                     this.graphicMarker.geometry = event.mapPoint
-                    this.retrieveMapServerData(item.graphic.attributes.OBJECTID)
                     }
                   })
 
@@ -546,12 +545,10 @@ export default {
       axios({
         url:'https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases2_v1/FeatureServer/2/query?f=json&where=OBJECTID%3D'+objectid+'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&token='
       }).then(res=>{
-        console.log(res)
         this.currentAttribute = res.data.features[0].attributes
         if(this.currentAttribute.ISO3!==null){
           this.retrieveNewsData(this.selectedCountry.code)
         }
-        console.log(this.currentAttribute.ISO3)
       }).finally(res=>{
         this.mapserverLoading = false
       })
@@ -567,7 +564,6 @@ export default {
             this.newsData.splice(index,1)
           }
         })
-        console.log(this.newsData)
       }).finally(res=>{
         this.newsLoading = false
       })
