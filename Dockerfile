@@ -2,7 +2,7 @@
 FROM node:alpine
 
 # adding required file
-RUN apk add --no-cache make gcc g++ python pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev
+RUN apk add --no-cache make gcc g++ curl py-pip pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev
 
 # create destination directory
 RUN mkdir -p /usr/src/nuxt-app
